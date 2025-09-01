@@ -84,10 +84,10 @@ That's it! Your professional portfolio is now live on the web.
 
 export const downloadPortfolioAsZip = async (portfolioData: PortfolioData): Promise<void> => {
     if (typeof JSZip === 'undefined') {
-        throw new Error("Download library (JSZip) is not loaded yet. Please try again in a moment.");
+        throw new Error("Download library (JSZip) has not loaded yet. Please try again in a moment.");
     }
-    if (typeof saveAs === 'undefined') {
-        throw new Error("Download library (FileSaver.js) is not loaded yet. Please try again in a moment.");
+     if (typeof saveAs === 'undefined') {
+        throw new Error("Download library (FileSaver.js) has not loaded yet. Please try again in a moment.");
     }
     
     try {
@@ -97,7 +97,7 @@ export const downloadPortfolioAsZip = async (portfolioData: PortfolioData): Prom
             React.createElement(Portfolio, {
                 onAdminClick: () => {},
                 onDownloadClick: () => {},
-                isDownloading: false,
+                downloadStatus: 'idle',
                 isExporting: true,
             })
         );
@@ -112,7 +112,6 @@ export const downloadPortfolioAsZip = async (portfolioData: PortfolioData): Prom
 
         const content = await zip.generateAsync({ type: "blob" });
         
-        // Use FileSaver.js for a reliable download
         saveAs(content, "portfolio.zip");
 
     } catch (error) {
