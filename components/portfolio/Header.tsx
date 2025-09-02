@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 
 const NavLink: React.FC<{ sectionId: string; children: React.ReactNode; onClick?: () => void }> = ({ sectionId, children, onClick }) => {
@@ -28,7 +27,7 @@ const NavLink: React.FC<{ sectionId: string; children: React.ReactNode; onClick?
 const Header: React.FC<{ onAdminClick: () => void; isExporting?: boolean; }> = ({ onAdminClick, isExporting = false }) => {
     const [isOpen, setIsOpen] = useState(false);
 
-    const navItems = ['experience', 'education', 'skills', 'projects', 'certifications', 'achievements'];
+    const navItems = ['experience', 'education', 'skills', 'projects', 'certifications', 'achievements', 'contact'];
     
     const closeMobileMenu = () => {
         setIsOpen(false);

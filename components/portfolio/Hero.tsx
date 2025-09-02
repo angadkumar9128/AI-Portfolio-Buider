@@ -2,27 +2,108 @@ import React from 'react';
 import { PersonalDetails } from '../../types';
 
 const Hero: React.FC<{ data: PersonalDetails }> = ({ data }) => {
+    const hasProfilePicture = !!data.profilePictureUrl;
+
     return (
         <section id="hero" className="bg-white dark:bg-gray-800 py-20 md:py-32">
-            <div className="container mx-auto px-4 md:px-8 text-center">
-                <h1 className="text-5xl md:text-7xl font-extrabold text-gray-900 dark:text-white mb-4">
-                    {data.name}
-                </h1>
-                <p className="text-xl md:text-2xl text-blue-600 dark:text-blue-400 font-semibold mb-6">
-                    {data.title}
-                </p>
-                <p className="max-w-3xl mx-auto text-lg text-gray-600 dark:text-gray-300 mb-8">
-                    {data.summary}
-                </p>
-                <div className="flex justify-center items-center space-x-6">
-                    {data.email && <a href={`mailto:${data.email}`} className="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition" aria-label="Email"><IconEmail /></a>}
-                    {data.linkedin && <a href={data.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition" aria-label="LinkedIn"><IconLinkedIn /></a>}
-                    {data.github && <a href={data.github} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition" aria-label="GitHub"><IconGitHub /></a>}
-                    {data.leetcode && <a href={data.leetcode} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition" aria-label="LeetCode"><IconLeetCode /></a>}
-                    {data.hackerrank && <a href={data.hackerrank} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition" aria-label="HackerRank"><IconHackerRank /></a>}
-                    {data.phone && <a href={`tel:${data.phone}`} className="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition" aria-label="Phone"><IconPhone /></a>}
-                </div>
+            <div className="container mx-auto px-4 md:px-8">
+                {hasProfilePicture ? (
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 lg:gap-16">
+                        {/* Text content on the left for desktop */}
+                        <div className="flex flex-col items-center md:items-start text-center md:text-left order-2 md:order-1">
+                            <h1 className="text-5xl md:text-7xl font-extrabold text-gray-900 dark:text-white mb-4">
+                                {data.name}
+                            </h1>
+                            <p className="text-xl md:text-2xl text-blue-600 dark:text-blue-400 font-semibold mb-6">
+                                {data.title}
+                            </p>
+                            <p className="max-w-2xl text-lg text-gray-600 dark:text-gray-300 mb-8">
+                                {data.summary}
+                            </p>
+                            {data.resumeUrl && (
+                                <div className="mb-8">
+                                    <a
+                                        href={data.resumeUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg"
+                                        aria-label="Download Resume"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 9.293a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+                                        </svg>
+                                        Download Resume
+                                    </a>
+                                </div>
+                            )}
+                            <div className="flex items-center space-x-6">
+                                {data.email && <a href={`mailto:${data.email}`} className="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition" aria-label="Email"><IconEmail /></a>}
+                                {data.linkedin && <a href={data.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition" aria-label="LinkedIn"><IconLinkedIn /></a>}
+                                {data.github && <a href={data.github} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition" aria-label="GitHub"><IconGitHub /></a>}
+                                {data.leetcode && <a href={data.leetcode} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition" aria-label="LeetCode"><IconLeetCode /></a>}
+                                {data.hackerrank && <a href={data.hackerrank} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition" aria-label="HackerRank"><IconHackerRank /></a>}
+                                {data.phone && <a href={`tel:${data.phone}`} className="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition" aria-label="Phone"><IconPhone /></a>}
+                            </div>
+                        </div>
+                        {/* Image on the right for desktop */}
+                        <div className="flex-shrink-0 order-1 md:order-2">
+                            <div className="relative">
+                                <img
+                                    src={data.profilePictureUrl}
+                                    alt={data.name}
+                                    className="rounded-full w-48 h-48 md:w-64 md:h-64 object-cover shadow-2xl border-4 border-white dark:border-gray-700"
+                                />
+                                 <div className="absolute inset-0 rounded-full border-4 border-blue-500/50 animate-pulse-slow"></div>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="flex flex-col items-center text-center">
+                        <h1 className="text-5xl md:text-7xl font-extrabold text-gray-900 dark:text-white mb-4">
+                            {data.name}
+                        </h1>
+                        <p className="text-xl md:text-2xl text-blue-600 dark:text-blue-400 font-semibold mb-6">
+                            {data.title}
+                        </p>
+                        <p className="max-w-3xl text-lg text-gray-600 dark:text-gray-300 mb-8">
+                            {data.summary}
+                        </p>
+                        {data.resumeUrl && (
+                            <div className="mb-8">
+                                <a
+                                    href={data.resumeUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg"
+                                    aria-label="Download Resume"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 9.293a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+                                    </svg>
+                                    Download Resume
+                                </a>
+                            </div>
+                        )}
+                        <div className="flex items-center space-x-6">
+                            {data.email && <a href={`mailto:${data.email}`} className="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition" aria-label="Email"><IconEmail /></a>}
+                            {data.linkedin && <a href={data.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition" aria-label="LinkedIn"><IconLinkedIn /></a>}
+                            {data.github && <a href={data.github} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition" aria-label="GitHub"><IconGitHub /></a>}
+                            {data.leetcode && <a href={data.leetcode} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition" aria-label="LeetCode"><IconLeetCode /></a>}
+                            {data.hackerrank && <a href={data.hackerrank} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition" aria-label="HackerRank"><IconHackerRank /></a>}
+                            {data.phone && <a href={`tel:${data.phone}`} className="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition" aria-label="Phone"><IconPhone /></a>}
+                        </div>
+                    </div>
+                )}
             </div>
+             <style>{`
+                @keyframes pulse-slow {
+                    0%, 100% { transform: scale(1); opacity: 0.5; }
+                    50% { transform: scale(1.05); opacity: 0.8; }
+                }
+                .animate-pulse-slow {
+                    animation: pulse-slow 4s infinite ease-in-out;
+                }
+            `}</style>
         </section>
     );
 };

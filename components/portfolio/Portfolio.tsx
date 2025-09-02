@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
 import Header from './Header';
@@ -11,6 +10,8 @@ import Achievements from './Achievements';
 import Certifications from './Certifications';
 import Footer from './Footer';
 import DownloadCTA from './DownloadCTA';
+import Contact from './Contact';
+import AnimatedSection from '../shared/AnimatedSection';
 
 interface PortfolioProps {
     onAdminClick: () => void;
@@ -49,6 +50,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ onAdminClick, onDownloadClick, do
         { id: 'projects', component: <Projects data={portfolioData.projects} />, condition: portfolioData.projects?.length > 0 },
         { id: 'certifications', component: <Certifications data={portfolioData.certifications} />, condition: portfolioData.certifications?.length > 0 },
         { id: 'achievements', component: <Achievements data={portfolioData.achievements} />, condition: portfolioData.achievements?.length > 0 },
+        { id: 'contact', component: <Contact />, condition: !isExporting },
     ];
 
     return (
@@ -61,11 +63,9 @@ const Portfolio: React.FC<PortfolioProps> = ({ onAdminClick, onDownloadClick, do
                 <Hero data={portfolioData.personalDetails} />
                 {sections.map(section => (
                     section.condition && (
-                        <section key={section.id} id={section.id} className="py-16 md:py-24">
-                            <div className="container mx-auto px-4 md:px-8">
-                                {section.component}
-                            </div>
-                        </section>
+                       <AnimatedSection key={section.id} id={section.id} isExporting={isExporting}>
+                           {section.component}
+                        </AnimatedSection>
                     )
                 ))}
             </main>

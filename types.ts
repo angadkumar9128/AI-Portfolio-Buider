@@ -8,6 +8,8 @@ export interface PersonalDetails {
     summary: string;
     leetcode?: string;
     hackerrank?: string;
+    resumeUrl?: string;
+    profilePictureUrl?: string;
 }
 
 export interface Education {
@@ -30,6 +32,7 @@ export interface WorkExperience {
 export interface Skill {
     category: string;
     name: string;
+    level: number; // Proficiency level from 0 to 100
 }
 
 export interface Project {
@@ -37,6 +40,7 @@ export interface Project {
     description: string;
     technologies: string[];
     link?: string;
+    imageUrl?: string;
 }
 
 export interface Achievement {
@@ -54,6 +58,13 @@ export interface Certification {
 export interface SEO {
     title: string;
     description: string;
+}
+
+export interface ContactMessage {
+    name: string;
+    email: string;
+    message: string;
+    date: string;
 }
 
 export interface PortfolioData {

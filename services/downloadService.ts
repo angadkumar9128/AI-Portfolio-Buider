@@ -91,15 +91,19 @@ export const downloadPortfolioAsZip = async (portfolioData: PortfolioData): Prom
     }
     
     try {
+        // FIX: The `children` prop must be passed inside the props object for `React.createElement`
+        // to satisfy the type definition of `PortfolioProvider` which uses `React.FC`.
         const portfolioToRender = React.createElement(
             PortfolioProvider,
-            { initialData: portfolioData },
-            React.createElement(Portfolio, {
-                onAdminClick: () => {},
-                onDownloadClick: () => {},
-                downloadStatus: 'idle',
-                isExporting: true,
-            })
+            {
+                initialData: portfolioData,
+                children: React.createElement(Portfolio, {
+                    onAdminClick: () => {},
+                    onDownloadClick: () => {},
+                    downloadStatus: 'idle',
+                    isExporting: true,
+                }),
+            }
         );
 
         const staticMarkup = ReactDOMServer.renderToStaticMarkup(portfolioToRender);

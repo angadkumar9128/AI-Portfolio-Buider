@@ -7,9 +7,9 @@ const Certifications: React.FC<{ data: Certification[] }> = ({ data }) => {
     return (
         <div>
             <SectionTitle>Certifications</SectionTitle>
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-8 md:grid-cols-2">
                 {data.map((cert, index) => (
-                    <Card key={index} className="transition-shadow duration-300 hover:shadow-xl">
+                    <Card key={index} className="transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                         <div className="flex items-start space-x-4">
                             <div className="flex-shrink-0">
                                 <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
