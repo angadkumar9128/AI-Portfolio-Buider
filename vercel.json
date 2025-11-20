@@ -4,9 +4,8 @@
     { "src": "package.json", "use": "@vercel/static-build", "config": { "distDir": "dist" } },
     { "src": "api/**/*.js", "use": "@vercel/node" }
   ],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/generate.js" },
-    { "src": "/(.*)", "dest": "/index.html" }
-  ],
-  "cleanUrls": true
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/generate.js" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }
