@@ -1,160 +1,30 @@
-import { GoogleGenAI, Type } from "@google/genai";
+// services/geminiService.ts
+// Client-side wrapper: sends resumeText to the serverless function which calls Gemini
 import { PortfolioData } from '../types';
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
-const schema = {
-    type: Type.OBJECT,
-    properties: {
-        personalDetails: {
-            type: Type.OBJECT,
-            properties: {
-                name: { type: Type.STRING },
-                title: { type: Type.STRING },
-                email: { type: Type.STRING },
-                phone: { type: Type.STRING },
-                linkedin: { type: Type.STRING },
-                github: { type: Type.STRING },
-                leetcode: { type: Type.STRING },
-                hackerrank: { type: Type.STRING },
-                summary: { type: Type.STRING, description: "A 3-4 sentence professional summary." },
-                resumeUrl: { type: Type.STRING, description: "A public URL to the user's resume, e.g., a Google Drive share link. Omit if not found." },
-                profilePictureUrl: { type: Type.STRING, description: "This will be provided by user upload. Leave this field empty." }
-            },
-            required: ["name", "title", "email", "summary"]
-        },
-        education: {
-            type: Type.ARRAY,
-            items: {
-                type: Type.OBJECT,
-                properties: {
-                    institution: { type: Type.STRING },
-                    degree: { type: Type.STRING },
-                    fieldOfStudy: { type: Type.STRING },
-                    startDate: { type: Type.STRING },
-                    endDate: { type: Type.STRING },
-                    description: { type: Type.STRING }
-                },
-                required: ["institution", "degree", "startDate", "endDate"]
-            }
-        },
-        workExperience: {
-            type: Type.ARRAY,
-            items: {
-                type: Type.OBJECT,
-                properties: {
-                    company: { type: Type.STRING },
-                    jobTitle: { type: Type.STRING },
-                    startDate: { type: Type.STRING },
-                    endDate: { type: Type.STRING },
-                    responsibilities: { type: Type.ARRAY, items: { type: Type.STRING } }
-                },
-                required: ["company", "jobTitle", "startDate", "endDate", "responsibilities"]
-            }
-        },
-        skills: {
-            type: Type.ARRAY,
-            items: {
-                type: Type.OBJECT,
-                properties: {
-                    category: { type: Type.STRING, description: "e.g., Programming Languages, Frameworks & Libraries" },
-                    name: { type: Type.STRING },
-                    level: { type: Type.NUMBER, description: "Proficiency level from 0 to 100, where 100 is expert." }
-                },
-                required: ["category", "name", "level"]
-            }
-        },
-        projects: {
-            type: Type.ARRAY,
-            items: {
-                type: Type.OBJECT,
-                properties: {
-                    name: { type: Type.STRING },
-                    description: { type: Type.STRING },
-                    technologies: { type: Type.ARRAY, items: { type: Type.STRING } },
-                    link: { type: Type.STRING },
-                    imageUrl: { type: Type.STRING, description: "This will be provided by user upload. Leave this field empty." }
-                },
-                required: ["name", "description", "technologies"]
-            }
-        },
-        achievements: {
-            type: Type.ARRAY,
-            items: {
-                type: Type.OBJECT,
-                properties: {
-                    title: { type: Type.STRING },
-                    description: { type: Type.STRING }
-                },
-                required: ["title", "description"]
-            }
-        },
-        certifications: {
-            type: Type.ARRAY,
-            items: {
-                type: Type.OBJECT,
-                properties: {
-                    name: { type: Type.STRING },
-                    issuingOrganization: { type: Type.STRING },
-                    date: { type: Type.STRING },
-                    credentialUrl: { type: Type.STRING }
-                },
-                required: ["name", "issuingOrganization", "date"]
-            }
-        },
-        seo: {
-            type: Type.OBJECT,
-            properties: {
-                title: { type: Type.STRING },
-                description: { type: Type.STRING, description: "Meta description for search engines, around 155 characters." }
-            },
-            required: ["title", "description"]
-        }
-    }
-};
-
 export const generatePortfolioContent = async (resumeText: string): Promise<PortfolioData> => {
-    try {
-        const prompt = `
-            You are an expert career coach and professional resume writer. Your task is to analyze the provided resume/LinkedIn profile text and transform it into a structured, HR-friendly JSON object for a modern portfolio website. Enhance the content by using strong action verbs, quantifying achievements where possible, and ensuring a professional tone. Also generate SEO metadata. Extract certifications and coding profiles like LeetCode and HackerRank if available. For each skill, also provide a 'level' from 0-100 representing proficiency, where 100 is an expert. This should be an objective estimation based on the provided text.
+  try {
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ resumeText })
+    });
 
-            The output MUST be a valid JSON object matching the provided schema. The 'imageUrl' field in projects and 'profilePictureUrl' in personalDetails should be left as an empty string.
-
-            Here is the user's resume/LinkedIn profile content:
-            ---
-            ${resumeText}
-            ---
-
-            Based on this content, generate a complete JSON object. Ensure all fields are filled appropriately. Use 'Present' for ongoing dates. If a field like 'leetcode', 'hackerrank', or 'resumeUrl' is not present in the text, omit it from the JSON.
-        `;
-
-        const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
-            contents: prompt,
-            config: {
-                responseMimeType: "application/json",
-                responseSchema: schema
-            },
-        });
-
-        const jsonText = response.text;
-        const parsedData = JSON.parse(jsonText) as PortfolioData;
-        
-        // Basic validation
-        if (!parsedData.personalDetails || !parsedData.workExperience) {
-          throw new Error("Generated data is missing essential fields.");
-        }
-        
-        // Ensure array fields exist
-        if (!parsedData.certifications) {
-            parsedData.certifications = [];
-        }
-
-
-        return parsedData;
-
-    } catch (error) {
-        console.error("Error generating portfolio content:", error);
-        throw new Error("Failed to generate portfolio content from the provided text. Please check the format and try again.");
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Server error: ${res.status} - ${errText}`);
     }
+
+    const data = await res.json();
+    // Basic validation (same as before)
+    if (!data.personalDetails || !data.workExperience) {
+      throw new Error('Generated data is missing essential fields.');
+    }
+    if (!data.certifications) data.certifications = [];
+
+    return data as PortfolioData;
+  } catch (error) {
+    console.error('Error generating portfolio content (client):', error);
+    throw new Error('Failed to generate portfolio content from the provided text. Please try again later.');
+  }
 };
